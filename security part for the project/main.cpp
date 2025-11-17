@@ -1,74 +1,315 @@
 #include <iostream>
-#include "SecurityAPI.h"
-
-int main() {
-    std::cout << "Security module running...\n";
-
-    SecurityAPI api("users.txt");
-
+#include <vector>
+#include <string>
+#include <map>
+using namespace std;
+ 
+/* ==========================================================
+   SIMPLE BUILT-IN SECURITY SYSTEM (REPLACEMENT FOR SecurityAPI)
+========================================================== */
+ 
+map<string, string> userDB;
+ 
+bool registerUser(string u, string p) {
+    if (userDB.count(u)) return false;
+    userDB[u] = p;
+    return true;
+}
+ 
+bool loginUser(string u, string p) {
+    return userDB.count(u) && userDB[u] == p;
+}
+ 
+bool resetPassword(string u, string p) {
+    if (!userDB.count(u)) return false;
+    userDB[u] = p;
+    return true;
+}
+ 
+/* ===============================================
+   FEEDFORGE APP DECLARATIONS
+=============================================== */
+ 
+void startQuiz();
+void quizQuestions();
+void quizResults();
+void home();
+void bookTab();
+void bookDetails(string title);
+void volunteerTab();
+void volunteerDetails(string eventName);
+ 
+vector<string> questions = {
+    "How much do you enjoy reading the news?",
+    "How political are your personal interests?",
+    "How often do you read science or tech updates?"
+};
+ 
+vector<int> answers;
+vector<string> books = {"Book One", "Book Two", "Book Three"};
+vector<string> events = {
+    "Clean the Park",
+    "Food Bank Sorting",
+    "Animal Shelter Help"
+};
+ 
+void waitEnter() {
+    cout << "\nPress ENTER to continue...";
+    cin.ignore();
+    cin.get();
+}
+ 
+/* ===============================================
+   LOGIN / REGISTER MENU
+=============================================== */
+ 
+void securityMenu() {
     while (true) {
-        std::cout << "\n=== Security Menu ===\n";
-        std::cout << "1. Register\n";
-        std::cout << "2. Login\n";
-        std::cout << "3. Reset Password\n";
-        std::cout << "4. Exit\n";
-        std::cout << "Choose an option: ";
-
+        cout << "\n========== SECURITY MENU ==========\n";
+        cout << "1. Register\n";
+        cout << "2. Login\n";
+        cout << "3. Reset Password\n";
+        cout << "4. Exit App\n";
+        cout << "Choose: ";
+ 
         int choice;
-        std::cin >> choice;
-
+        cin >> choice;
+ 
         if (choice == 1) {
-            std::string u, p;
-            std::cout << "Enter new username: ";
-            std::cin >> u;
-            std::cout << "Enter new password: ";
-            std::cin >> p;
-
-            if (api.registerUser(u, p))
-                std::cout << "User registered successfully.\n";
+            string u, p;
+            cout << "New username: ";
+            cin >> u;
+            cout << "New password: ";
+            cin >> p;
+ 
+            if (registerUser(u, p))
+                cout << "Account created successfully.\n";
             else
-                std::cout << "User already exists.\n";
+                cout << "User already exists.\n";
         }
-
+ 
         else if (choice == 2) {
-            std::string u, p;
-            std::cout << "Enter username: ";
-            std::cin >> u;
-            std::cout << "Enter password: ";
-            std::cin >> p;
-
-            std::string token;
-            if (api.loginUser(u, p, token)) {
-                std::cout << "Login successful.\n";
-                std::cout << "Session Token: " << token << "\n";
-            }
-            else {
-                std::cout << "Invalid username or password.\n";
+            string u, p;
+            cout << "Username: ";
+            cin >> u;
+            cout << "Password: ";
+            cin >> p;
+ 
+            if (loginUser(u, p)) {
+                cout << "Login successful!\n";
+                waitEnter();
+                startQuiz();     // CONTINUE TO FEEDFORGE APP
+                return;
+            } else {
+                cout << "Invalid login.\n";
             }
         }
-
+ 
         else if (choice == 3) {
-            std::string u, p;
-            std::cout << "Enter username: ";
-            std::cin >> u;
-            std::cout << "Enter new password: ";
-            std::cin >> p;
-
-            if (api.resetPassword(u, p))
-                std::cout << "Password reset successful.\n";
+            string u, p;
+            cout << "Username: ";
+            cin >> u;
+            cout << "New password: ";
+            cin >> p;
+ 
+            if (resetPassword(u, p))
+                cout << "Password reset successful.\n";
             else
-                std::cout << "User not found.\n";
+                cout << "User not found.\n";
         }
-
+ 
         else if (choice == 4) {
-            std::cout << "Exiting...\n";
-            break;
+            cout << "Exiting...\n";
+            exit(0);
         }
-
+ 
         else {
-            std::cout << "Invalid option.\n";
+            cout << "Invalid.\n";
         }
     }
-
+}
+ 
+/* ===============================================
+   START QUIZ SCREEN
+=============================================== */
+ 
+void startQuiz() {
+    system("clear || cls");
+    cout << "=============================\n";
+    cout << "         FEEDFORGE\n";
+    cout << "=============================\n\n";
+    cout << "1. Start Quiz\n";
+    cout << "2. Exit\n\nChoose: ";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 1) quizQuestions();
+    else exit(0);
+}
+ 
+/* ===============================================
+   QUIZ QUESTIONS
+=============================================== */
+ 
+void quizQuestions() {
+    answers.clear();
+    system("clear || cls");
+ 
+    for (int i = 0; i < questions.size(); i++) {
+        cout << "Question " << i+1 << ": " << questions[i] << "\n\n";
+        cout << "Rate 1-5 → ";
+        int ans;
+        cin >> ans;
+        answers.push_back(ans);
+ 
+        system("clear || cls");
+    }
+ 
+    quizResults();
+}
+ 
+/* ===============================================
+   RESULTS
+=============================================== */
+ 
+void quizResults() {
+    system("clear || cls");
+ 
+    cout << "============== QUIZ RESULTS ==============\n";
+    cout << "Suggested publications:\n\n";
+    cout << "• New York Times\n";
+    cout << "• Wall Street Journal\n";
+    cout << "• Reuters\n\n";
+ 
+    cout << "1. Continue → Home\n";
+    cout << "2. Retake Quiz\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 1) home();
+    else quizQuestions();
+}
+ 
+/* ===============================================
+   HOME SCREEN
+=============================================== */
+ 
+void home() {
+    system("clear || cls");
+ 
+    cout << "================ HOME ================\n";
+    cout << "Welcome to your personalized FeedForge feed.\n\n";
+ 
+    cout << "1. Book Recommendations\n";
+    cout << "2. Volunteer Events\n";
+    cout << "3. Logout\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 1) bookTab();
+    else if (choice == 2) volunteerTab();
+    else securityMenu();
+}
+ 
+/* ===============================================
+   BOOKS
+=============================================== */
+ 
+void bookTab() {
+    system("clear || cls");
+ 
+    cout << "========= BOOK RECOMMENDATIONS =========\n\n";
+ 
+    for (int i = 0; i < books.size(); i++)
+        cout << i+1 << ". " << books[i] << "\n";
+ 
+    cout << "\n0. Back\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 0) home();
+    else if (choice >= 1 && choice <= books.size())
+        bookDetails(books[choice-1]);
+    else
+        bookTab();
+}
+ 
+void bookDetails(string title) {
+    system("clear || cls");
+ 
+    cout << "============== BOOK DETAILS ==============\n";
+    cout << "Title: " << title << "\n";
+    cout << "Summary: A book matched to your interests.\n";
+    cout << "Price: $9.99\n\n";
+ 
+    cout << "1. Buy\n";
+    cout << "2. Back\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 2) bookTab();
+    else {
+        cout << "Purchase successful!\n";
+        waitEnter();
+        bookTab();
+    }
+}
+ 
+/* ===============================================
+   VOLUNTEERING
+=============================================== */
+ 
+void volunteerTab() {
+    system("clear || cls");
+ 
+    cout << "========= VOLUNTEER EVENTS =========\n\n";
+ 
+    for (int i = 0; i < events.size(); i++)
+        cout << i+1 << ". " << events[i] << "\n";
+ 
+    cout << "\n0. Back\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 0) home();
+    else if (choice >= 1 && choice <= events.size())
+        volunteerDetails(events[choice-1]);
+    else
+        volunteerTab();
+}
+ 
+void volunteerDetails(string name) {
+    system("clear || cls");
+ 
+    cout << "=========== VOLUNTEER DETAILS ===========\n";
+    cout << "Event: " << name << "\n";
+    cout << "Description: A chance to help your community.\n\n";
+ 
+    cout << "1. Register\n";
+    cout << "2. Back\n\n";
+ 
+    int choice;
+    cin >> choice;
+ 
+    if (choice == 2) volunteerTab();
+    else {
+        cout << "You are registered!\n";
+        waitEnter();
+        volunteerTab();
+    }
+}
+ 
+/* ===============================================
+   MAIN (App starts at Security/Login)
+=============================================== */
+ 
+int main() {
+    securityMenu();
     return 0;
 }
