@@ -1,3 +1,0 @@
-C:/Users/thani/Desktop/security part for the project/cmake-build-debug/CMakeFiles/security_part_for_the_project.dir
-C:/Users/thani/Desktop/security part for the project/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/thani/Desktop/security part for the project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
