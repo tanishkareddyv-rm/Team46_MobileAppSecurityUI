@@ -56,10 +56,14 @@ C++ Security Module + UI integration for mobile app project
 
 ## Collaboration Notes
 
-- **Security module** (`Security.cpp` / `Security.h`) → handled by Tanishka  
-- **UI / Integration** (`main.cpp`) → handled by teammate  
-- Always test locally before uploading to GitHub  
-- Download the latest version from GitHub before making changes  
+- **Security module** (`Security.cpp` / `Security.h`) → handled by Tanishka
+- Security & Password module (`Security.cpp` / `Security.h`)  
+- Integration planning and testing with UI   
+- README.md handled by Tanishka
+- **UI / Integration** (`main.cpp`) → handled by Suzy
+- UI module(Integrated main.cpp)
+- Ensuring the system works correctly 
+- Always test locally before uploading to GitHub
 
 ---
 
